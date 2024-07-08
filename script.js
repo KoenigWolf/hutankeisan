@@ -43,22 +43,22 @@ function calculateTaxes() {
     resultDiv.innerHTML = `
         <h2>計算結果</h2>
         <h3>社員負担分</h3>
-        <p>所得税 ${incomeTax.toLocaleString()} 円 (${incomeTaxRate * 100}%)</p>
-        <p>住民税 ${residentTax.toLocaleString()} 円 (${(residentTaxRate / 2) * 100}%)</p>
-        <p>健康保険料 ${healthInsuranceEmployee.toLocaleString()} 円 (${(healthInsuranceRate / 2) * 100}%)</p>
-        <p>厚生年金保険料 ${pensionInsuranceEmployee.toLocaleString()} 円 (${(pensionInsuranceRate / 2) * 100}%)</p>
-        <p>雇用保険料 ${employmentInsuranceEmployee.toLocaleString()} 円 (${(employmentInsuranceRate / 2) * 100}%)</p>
-        <p>介護保険料 ${careInsuranceEmployee.toLocaleString()} 円 (${(careInsuranceRate / 2) * 100}%)</p>
-        <h3>合計負担額（社員） ${totalEmployeeDeductions.toLocaleString()} 円</h3>
+        <p>所得税: ${incomeTax.toLocaleString()} 円 (${incomeTaxRate * 100}%)</p>
+        <p>住民税: ${residentTax.toLocaleString()} 円 (${(residentTaxRate / 2) * 100}%)</p>
+        <p>健康保険料: ${healthInsuranceEmployee.toLocaleString()} 円 (${(healthInsuranceRate / 2) * 100}%)</p>
+        <p>厚生年金保険料: ${pensionInsuranceEmployee.toLocaleString()} 円 (${(pensionInsuranceRate / 2) * 100}%)</p>
+        <p>雇用保険料: ${employmentInsuranceEmployee.toLocaleString()} 円 (${(employmentInsuranceRate / 2) * 100}%)</p>
+        <p>介護保険料: ${careInsuranceEmployee.toLocaleString()} 円 (${(careInsuranceRate / 2) * 100}%)</p>
+        <h3>合計負担額（社員）: ${totalEmployeeDeductions.toLocaleString()} 円</h3>
         
         <h3>会社負担分</h3>
-        <p>健康保険料 ${healthInsuranceEmployer.toLocaleString()} 円 (${(healthInsuranceRate / 2) * 100}%)</p>
-        <p>厚生年金保険料 ${pensionInsuranceEmployer.toLocaleString()} 円 (${(pensionInsuranceRate / 2) * 100}%)</p>
-        <p>雇用保険料 ${employmentInsuranceEmployer.toLocaleString()} 円 (${(employmentInsuranceRate * 2 / 3) * 100}%)</p>
-        <p>労災保険料 ${laborInsuranceEmployer.toLocaleString()} 円 (${laborInsuranceRate * 100}%)</p>
-        <p>子ども・子育て拠出金 ${childCareEmployer.toLocaleString()} 円 (${childCareRate * 100}%)</p>
-        <p>介護保険料 ${careInsuranceEmployer.toLocaleString()} 円 (${(careInsuranceRate / 2) * 100}%)</p>
-        <h3>合計負担額（会社） ${totalEmployerDeductions.toLocaleString()} 円</h3>
+        <p>健康保険料: ${healthInsuranceEmployer.toLocaleString()} 円 (${(healthInsuranceRate / 2) * 100}%)</p>
+        <p>厚生年金保険料: ${pensionInsuranceEmployer.toLocaleString()} 円 (${(pensionInsuranceRate / 2) * 100}%)</p>
+        <p>雇用保険料: ${employmentInsuranceEmployer.toLocaleString()} 円 (${(employmentInsuranceRate * 2 / 3) * 100}%)</p>
+        <p>労災保険料: ${laborInsuranceEmployer.toLocaleString()} 円 (${laborInsuranceRate * 100}%)</p>
+        <p>子ども・子育て拠出金: ${childCareEmployer.toLocaleString()} 円 (${childCareRate * 100}%)</p>
+        <p>介護保険料: ${careInsuranceEmployer.toLocaleString()} 円 (${(careInsuranceRate / 2) * 100}%)</p>
+        <h3>合計負担額（会社）: ${totalEmployerDeductions.toLocaleString()} 円</h3>
     `;
 }
 
