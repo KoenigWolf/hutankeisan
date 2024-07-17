@@ -1,5 +1,49 @@
+function calculateIncomeTax(salary) {
+    const annualSalary = salary * 12; // 月給を年額に換算
+    let incomeDeduction;
+
+    // 給与所得控除の計算
+    if (annualSalary <= 1800000) {
+        incomeDeduction = Math.max(annualSalary * 0.4, 550000);
+    } else if (annualSalary <= 3600000) {
+        incomeDeduction = annualSalary * 0.3 + 180000;
+    } else if (annualSalary <= 6600000) {
+        incomeDeduction = annualSalary * 0.2 + 540000;
+    } else if (annualSalary <= 8500000) {
+        incomeDeduction = annualSalary * 0.1 + 1200000;
+    } else {
+        incomeDeduction = 1950000;
+    }
+
+    const basicDeduction = 480000; // 基礎控除
+    const taxableIncome = annualSalary - incomeDeduction - basicDeduction;
+
+    // 課税所得に対する所得税率の適用
+    let incomeTax = 0;
+    if (taxableIncome <= 1950000) {
+        incomeTax = taxableIncome * 0.05;
+    } else if (taxableIncome <= 3300000) {
+        incomeTax = 1950000 * 0.05 + (taxableIncome - 1950000) * 0.1;
+    } else if (taxableIncome <= 6950000) {
+        incomeTax = 1950000 * 0.05 + (3300000 - 1950000) * 0.1 + (taxableIncome - 3300000) * 0.2;
+    } else if (taxableIncome <= 9000000) {
+        incomeTax = 1950000 * 0.05 + (3300000 - 1950000) * 0.1 + (6950000 - 3300000) * 0.2 + (taxableIncome - 6950000) * 0.23;
+    } else if (taxableIncome <= 18000000) {
+        incomeTax = 1950000 * 0.05 + (3300000 - 1950000) * 0.1 + (6950000 - 3300000) * 0.2 + (9000000 - 6950000) * 0.23 + (taxableIncome - 9000000) * 0.33;
+    } else if (taxableIncome <= 40000000) {
+        incomeTax = 1950000 * 0.05 + (3300000 - 1950000) * 0.1 + (6950000 - 3300000) * 0.2 + (9000000 - 6950000) * 0.23 + (18000000 - 9000000) * 0.33 + (taxableIncome - 18000000) * 0.4;
+    } else {
+        incomeTax = 1950000 * 0.05 + (3300000 - 1950000) * 0.1 + (6950000 - 3300000) * 0.2 + (9000000 - 6950000) * 0.23 + (18000000 - 9000000) * 0.33 + (40000000 - 18000000) * 0.4 + (taxableIncome - 40000000) * 0.45;
+    }
+
+    // 月額所得税
+    const monthlyIncomeTax = Math.floor(incomeTax / 12);
+    return monthlyIncomeTax;
+}
+
 function calculateSalary() {
     let baseSalary = parseFloat(document.getElementById('baseSalary').value);
+    let bonus = parseFloat(document.getElementById('bonus').value) || 0; // ボーナス
     let pensionCheck = document.getElementById('pensionCheck').checked;
     let careInsuranceCheck = document.getElementById('careInsuranceCheck').checked;
     let childCareCheck = document.getElementById('childCareCheck').checked;
@@ -10,77 +54,82 @@ function calculateSalary() {
     }
 
     baseSalary *= 10000; // 万円単位を円単位に変換
-
-    // 税金と保険料の割合
-    const incomeTaxRate = 0.05;
-    const residentTaxRate = 0.10;
-    const healthInsuranceRate = 0.0987;
-    const employmentInsuranceRate = 0.003;
-    const careInsuranceRate = 0.0173;
-    const pensionInsuranceRate = 0.183;
+    const annualSalary = baseSalary * 12 + bonus * 10000; // 年収
 
     // 社員負担分の計算
-    const incomeTax = Math.floor(baseSalary * incomeTaxRate);
-    const residentTax = Math.floor(baseSalary * (residentTaxRate / 2));
-    const healthInsuranceEmployee = Math.floor(baseSalary * (healthInsuranceRate / 2));
-    const employmentInsuranceEmployee = Math.floor(baseSalary * (employmentInsuranceRate / 2));
+    const monthlyIncomeTax = calculateIncomeTax(baseSalary);
+    const incomeTax = monthlyIncomeTax;
+    const residentTaxEmployee = Math.floor(annualSalary * 0.1 / 12 / 2); // 住民税の社員負担分は年収の10%を12で割ったものの半分
+    const healthInsuranceEmployee = Math.floor(baseSalary * 0.0987 / 2);
+    const employmentInsuranceEmployee = Math.floor(baseSalary * 0.003 / 2);
     let careInsuranceEmployee = 0;
     let pensionInsuranceEmployee = 0;
 
     if (careInsuranceCheck) {
-        careInsuranceEmployee = Math.floor(baseSalary * (careInsuranceRate / 2));
+        careInsuranceEmployee = Math.floor(baseSalary * 0.0173 / 2);
     }
     if (pensionCheck) {
-        pensionInsuranceEmployee = Math.floor(baseSalary * (pensionInsuranceRate / 2));
+        pensionInsuranceEmployee = Math.floor(baseSalary * 0.183 / 2);
     }
 
-    const totalEmployeeDeductions = incomeTax + residentTax + healthInsuranceEmployee + pensionInsuranceEmployee + employmentInsuranceEmployee + careInsuranceEmployee;
+    const totalEmployeeDeductions = incomeTax + residentTaxEmployee + healthInsuranceEmployee + pensionInsuranceEmployee + employmentInsuranceEmployee + careInsuranceEmployee;
     const takeHomePay = baseSalary - totalEmployeeDeductions;
 
     // 会社負担分の計算
-    const healthInsuranceEmployer = Math.floor(baseSalary * (healthInsuranceRate / 2));
-    const employmentInsuranceEmployer = Math.floor(baseSalary * (employmentInsuranceRate * 2 / 3));
-    const laborInsuranceEmployer = Math.floor(baseSalary * 0.0025); // 固定値
+    const residentTaxEmployer = Math.floor(annualSalary * 0.1 / 12 / 2); // 住民税の会社負担分は年収の10%を12で割ったものの半分
+    const healthInsuranceEmployer = Math.floor(baseSalary * 0.0987 / 2);
+    const employmentInsuranceEmployer = Math.floor(baseSalary * 0.003 * 2 / 3);
+    const laborInsuranceEmployer = Math.floor(baseSalary * 0.0025);
     let childCareEmployer = 0;
     let careInsuranceEmployer = 0;
     let pensionInsuranceEmployer = 0;
 
     if (childCareCheck) {
-        childCareEmployer = Math.floor(baseSalary * 0.0036); // 固定値
+        childCareEmployer = Math.floor(baseSalary * 0.0036);
     }
     if (careInsuranceCheck) {
-        careInsuranceEmployer = Math.floor(baseSalary * (careInsuranceRate / 2));
+        careInsuranceEmployer = Math.floor(baseSalary * 0.0173 / 2);
     }
     if (pensionCheck) {
-        pensionInsuranceEmployer = Math.floor(baseSalary * (pensionInsuranceRate / 2));
+        pensionInsuranceEmployer = Math.floor(baseSalary * 0.183 / 2);
     }
 
-    const totalEmployerDeductions = healthInsuranceEmployer + pensionInsuranceEmployer + employmentInsuranceEmployer + laborInsuranceEmployer + childCareEmployer + careInsuranceEmployer;
+    const totalEmployerDeductions = residentTaxEmployer + healthInsuranceEmployer + pensionInsuranceEmployer + employmentInsuranceEmployer + laborInsuranceEmployer + childCareEmployer + careInsuranceEmployer;
 
     const resultDiv = document.getElementById('result');
-    resultDiv.innerHTML = `
-        <h3 class="mb-2">社員負担分</h3>
-        <p>所得税: ${incomeTax.toLocaleString()} 円 (${incomeTaxRate * 100}%)</p>
-        <p>住民税: ${residentTax.toLocaleString()} 円 (${(residentTaxRate / 2) * 100}%)</p>
-        <p>健康保険料: ${healthInsuranceEmployee.toLocaleString()} 円 (${(healthInsuranceRate / 2) * 100}%)</p>
-        ${pensionCheck ? `<p>厚生年金保険料: ${pensionInsuranceEmployee.toLocaleString()} 円 (${(pensionInsuranceRate / 2) * 100}%)</p>` : ''}
-        <p>雇用保険料: ${employmentInsuranceEmployee.toLocaleString()} 円 (${(employmentInsuranceRate / 2) * 100}%)</p>
-        ${careInsuranceCheck ? `<p>介護保険料: ${careInsuranceEmployee.toLocaleString()} 円 (${(careInsuranceRate / 2) * 100}%)</p>` : ''}
-        <h3 class="mt-4 mb-2">合計（社員）: ${totalEmployeeDeductions.toLocaleString()} 円</h3>
-        <h3 class="mt-2 mb-2">手取り額: ${takeHomePay.toLocaleString()} 円</h3>
-
-        <h3 class="mt-4 mb-2">会社負担分</h3>
-        <p>健康保険料: ${healthInsuranceEmployer.toLocaleString()} 円 (${(healthInsuranceRate / 2) * 100}%)</p>
-        ${pensionCheck ? `<p>厚生年金保険料: ${pensionInsuranceEmployer.toLocaleString()} 円 (${(pensionInsuranceRate / 2) * 100}%)</p>` : ''}
-        <p>雇用保険料: ${employmentInsuranceEmployer.toLocaleString()} 円 (${(employmentInsuranceRate * 2 / 3) * 100}%)</p>
-        <p>労災保険料: ${laborInsuranceEmployer.toLocaleString()} 円 (0.25%)</p>
-        ${childCareCheck ? `<p>子ども・子育て拠出金: ${childCareEmployer.toLocaleString()} 円 (0.36%)</p>` : ''}
-        ${careInsuranceCheck ? `<p>介護保険料: ${careInsuranceEmployer.toLocaleString()} 円 (${(careInsuranceRate / 2) * 100}%)</p>` : ''}
-        <h3 class="mt-4">合計（会社）: ${totalEmployerDeductions.toLocaleString()} 円</h3>
-    `;
     resultDiv.style.display = 'block';
+    resultDiv.innerHTML = `
+        <div class="row">
+            <div class="col-6">年収:</div>
+            <div class="col-6">${(annualSalary / 10000).toLocaleString()} 万円</div>
+            <div class="col-6">所得税:</div>
+            <div class="col-6">${incomeTax.toLocaleString()} 円</div>
+            <div class="col-6">住民税（社員負担分）:</div>
+            <div class="col-6">${residentTaxEmployee.toLocaleString()} 円</div>
+            <div class="col-6">健康保険料:</div>
+            <div class="col-6">${healthInsuranceEmployee.toLocaleString()} 円</div>
+            ${pensionCheck ? `<div class="col-6">厚生年金保険料:</div><div class="col-6">${pensionInsuranceEmployee.toLocaleString()} 円</div>` : ''}
+            <div class="col-6">雇用保険料:</div>
+            <div class="col-6">${employmentInsuranceEmployee.toLocaleString()} 円</div>
+            ${careInsuranceCheck ? `<div class="col-6">介護保険料:</div><div class="col-6">${careInsuranceEmployee.toLocaleString()} 円</div>` : ''}
+            <div class="col-12 mt-4">合計（社員）:</div>
+            <div class="col-12">${totalEmployeeDeductions.toLocaleString()} 円</div>
+            <div class="col-12 mt-2">手取り額:</div>
+            <div class="col-12">${takeHomePay.toLocaleString()} 円</div>
+            <div class="col-12 mt-4">会社負担分:</div>
+            <div class="col-6">住民税（会社負担分）:</div>
+            <div class="col-6">${residentTaxEmployer.toLocaleString()} 円</div>
+            <div class="col-6">健康保険料:</div>
+            <div class="col-6">${healthInsuranceEmployer.toLocaleString()} 円</div>
+            ${pensionCheck ? `<div class="col-6">厚生年金保険料:</div><div class="col-6">${pensionInsuranceEmployer.toLocaleString()} 円</div>` : ''}
+            <div class="col-6">雇用保険料:</div>
+            <div class="col-6">${employmentInsuranceEmployer.toLocaleString()} 円</div>
+            <div class="col-6">労災保険料:</div>
+            <div class="col-6">${laborInsuranceEmployer.toLocaleString()} 円</div>
+            ${childCareCheck ? `<div class="col-6">子ども・子育て拠出金:</div><div class="col-6">${childCareEmployer.toLocaleString()} 円</div>` : ''}
+            ${careInsuranceCheck ? `<div class="col-6">介護保険料:</div><div class="col-6">${careInsuranceEmployer.toLocaleString()} 円</div>` : ''}
+            <div class="col-12 mt-4">合計（会社）:</div>
+            <div class="col-12">${totalEmployerDeductions.toLocaleString()} 円</div>
+        </div>
+    `;
 }
-
-document.getElementById('toggle-dark-mode').addEventListener('click', function () {
-    document.body.classList.toggle('dark-mode');
-});

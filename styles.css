@@ -1,6 +1,7 @@
 body {
     font-family: 'Roboto', sans-serif;
-    background-color: #f8f9fa;
+    background-color: #f0f2f5; /* 明るい背景色 */
+    color: #333; /* ダークテキストカラー */
     margin: 0;
     padding: 0;
     display: flex;
@@ -12,11 +13,15 @@ body {
 .card {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
+    width: 100%;
+    max-width: 500px;
+    background-color: #ffffff; /* カードの背景色 */
+    color: #333; /* カードのテキストカラー */
 }
 
 .card-title {
     margin-bottom: 20px;
-    color: #333;
+    color: #007bff; /* ブルーカラー */
 }
 
 #result {
@@ -38,17 +43,16 @@ body {
     border-color: #b8daff;
 }
 
-.dark-mode {
-    background-color: #343a40;
-    color: #ffffff;
-}
+@media (max-width: 576px) {
+    .container {
+        padding: 0 15px;
+    }
 
-.dark-mode .card {
-    background-color: #495057;
-    color: #ffffff;
-}
+    .form-group {
+        margin-bottom: 1rem;
+    }
 
-.dark-mode .alert {
-    background-color: #6c757d;
-    color: #ffffff;
+    .form-check {
+        margin-bottom: 1rem;
+    }
 }
