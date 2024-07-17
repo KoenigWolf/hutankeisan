@@ -8,7 +8,6 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
 }
 
 /* コンテナの設定 */
@@ -16,9 +15,8 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100%;
-    padding: 15px;
-    margin-top: 30px; /* 上部マージンを減らして、上部付近に配置 */
+    padding: 10px;
+    margin-top: 20px; /* 上部マージンを減らして、上部付近に配置 */
 }
 
 /* カードの設定 */
@@ -31,11 +29,11 @@ body {
 
 /* カード幅の設定 */
 .col-md-10 {
-    max-width: 61.8%; /* 黄金比の幅 */
+    max-width: 110%;
 }
 
 .col-lg-8 {
-    max-width: 61.8%; /* 黄金比の幅 */
+    max-width: 110%;
 }
 
 /* カードタイトルの設定 */
