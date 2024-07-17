@@ -1,6 +1,7 @@
+/* 全体の設定 */
 body {
     font-family: 'Roboto', sans-serif;
-    background-color: #f0f2f5; /* 明るい背景色 */
+    background-color: #f8f9fa; /* 明るい背景色 */
     color: #333; /* ダークテキストカラー */
     margin: 0;
     padding: 0;
@@ -10,25 +11,47 @@ body {
     height: 100vh;
 }
 
+/* コンテナの設定 */
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    padding: 15px;
+    margin-top: 30px; /* 上部マージンを減らして、上部付近に配置 */
+}
+
+/* カードの設定 */
 .card {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
-    width: 100%;
-    max-width: 500px;
-    background-color: #ffffff; /* カードの背景色 */
-    color: #333; /* カードのテキストカラー */
+    background-color: #343a40; /* ダークモードカラー */
+    color: #ffffff; /* ダークモードテキストカラー */
 }
 
+/* カード幅の設定 */
+.col-md-10 {
+    max-width: 61.8%; /* 黄金比の幅 */
+}
+
+.col-lg-8 {
+    max-width: 61.8%; /* 黄金比の幅 */
+}
+
+/* カードタイトルの設定 */
 .card-title {
     margin-bottom: 20px;
-    color: #007bff; /* ブルーカラー */
+    color: #ffffff; /* ダークモードテキストカラー */
 }
 
+/* 結果表示の設定 */
 #result {
     font-size: 1rem;
     display: none;
+    white-space: nowrap; /* 折り返しを防止 */
 }
 
+/* マージンの設定 */
 .mt-4 {
     margin-top: 1.5rem;
 }
@@ -37,12 +60,71 @@ body {
     margin-bottom: 1.5rem;
 }
 
+/* アラートの設定 */
 .alert-primary {
     color: #004085;
     background-color: #cce5ff;
     border-color: #b8daff;
 }
 
+/* テーブルの設定 */
+.table {
+    width: 100%;
+    margin-bottom: 1rem;
+    color: #212529;
+}
+
+.table th,
+.table td {
+    padding: 0.75rem;
+    vertical-align: top;
+    border-top: 1px solid #dee2e6;
+}
+
+.table thead th {
+    vertical-align: bottom;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.table tbody + tbody {
+    border-top: 2px solid #dee2e6;
+}
+
+.table-sm th,
+.table-sm td {
+    padding: 0.3rem;
+}
+
+.table-bordered {
+    border: 1px solid #dee2e6;
+}
+
+.table-bordered th,
+.table-bordered td {
+    border: 1px solid #dee2e6;
+}
+
+.table-bordered thead th,
+.table-bordered thead td {
+    border-bottom-width: 2px;
+}
+
+.table-dark {
+    color: #fff;
+    background-color: #343a40;
+}
+
+.table-dark th,
+.table-dark td,
+.table-dark thead th {
+    border-color: #454d55;
+}
+
+.table-dark.table-bordered {
+    border: 0;
+}
+
+/* メディアクエリ：小さな画面向けの設定 */
 @media (max-width: 576px) {
     .container {
         padding: 0 15px;
