@@ -29,11 +29,11 @@ body {
 
 /* カード幅の設定 */
 .col-md-10 {
-    max-width: 110%;
+    max-width: 90%;
 }
 
 .col-lg-8 {
-    max-width: 110%;
+    max-width: 90%;
 }
 
 /* カードタイトルの設定 */
@@ -67,7 +67,7 @@ body {
 
 /* テーブルの設定 */
 .table {
-    width: 100%;
+    width: 95%;
     margin-bottom: 1rem;
     color: #212529;
 }
