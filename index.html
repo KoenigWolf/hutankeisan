@@ -13,27 +13,27 @@
             <div class="col-md-10 col-lg-8">
                 <div class="card shadow-lg">
                     <div class="card-body">
-                        <h1 class="card-title text-center">給与計算</h1>
+                        <h1 class="card-title text-center">税金</h1>
                         <form>
                             <div class="form-group">
-                                <label for="baseSalary">基本給 (万円)</label>
+                                <label for="baseSalary">月給 (万円)</label>
                                 <input type="number" class="form-control" id="baseSalary" name="baseSalary" required>
                             </div>
                             <div class="form-group">
-                                <label for="bonus">ボーナス (万円, 任意)</label>
+                                <label for="bonus">ボーナス (万円)</label>
                                 <input type="number" class="form-control" id="bonus" name="bonus">
                             </div>
                             <div class="form-group form-check">
                                 <input type="checkbox" class="form-check-input" id="pensionCheck" name="pensionCheck">
-                                <label class="form-check-label" for="pensionCheck">厚生年金に加入</label>
+                                <label class="form-check-label" for="pensionCheck">厚生年金</label>
                             </div>
                             <div class="form-group form-check">
                                 <input type="checkbox" class="form-check-input" id="careInsuranceCheck" name="careInsuranceCheck">
-                                <label class="form-check-label" for="careInsuranceCheck">介護保険料に加入</label>
+                                <label class="form-check-label" for="careInsuranceCheck">介護保険料</label>
                             </div>
                             <div class="form-group form-check">
                                 <input type="checkbox" class="form-check-input" id="childCareCheck" name="childCareCheck">
-                                <label class="form-check-label" for="childCareCheck">子ども・子育て拠出金に加入</label>
+                                <label class="form-check-label" for="childCareCheck">子ども・子育て拠出金</label>
                             </div>
                             <button type="button" class="btn btn-primary btn-block" onclick="calculateSalary()">計算</button>
                         </form>
