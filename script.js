@@ -103,7 +103,7 @@ function calculateSalary() {
             <table class="table table-dark table-bordered">
                 <thead>
                     <tr>
-                        <th>項目</th>
+                        <th>社員負担</th>
                         <th>年収</th>
                         <th>月収</th>
                     </tr>
@@ -115,34 +115,34 @@ function calculateSalary() {
                         <td>${(annualSalary / 12).toLocaleString()} 円</td>
                     </tr>
                     <tr>
-                        <td>所得税（社員負担）</td>
+                        <td>所得税</td>
                         <td>${(incomeTax * 12).toLocaleString()} 円</td>
                         <td>${incomeTax.toLocaleString()} 円</td>
                     </tr>
                     <tr>
-                        <td>住民税（社員負担）</td>
+                        <td>住民税</td>
                         <td>${(residentTaxEmployee * 12).toLocaleString()} 円</td>
                         <td>${residentTaxEmployee.toLocaleString()} 円</td>
                     </tr>
                     <tr>
-                        <td>健康保険（社員負担）</td>
+                        <td>健康保険</td>
                         <td>${(healthInsuranceEmployee * 12).toLocaleString()} 円</td>
                         <td>${healthInsuranceEmployee.toLocaleString()} 円</td>
                     </tr>
                     ${pensionCheck ? `
                     <tr>
-                        <td>厚生年金（社員負担）</td>
+                        <td>厚生年金</td>
                         <td>${(pensionInsuranceEmployee * 12).toLocaleString()} 円</td>
                         <td>${pensionInsuranceEmployee.toLocaleString()} 円</td>
                     </tr>` : ''}
                     ${careInsuranceCheck ? `
                     <tr>
-                        <td>介護保険（社員負担）</td>
+                        <td>介護保険</td>
                         <td>${(careInsuranceEmployee * 12).toLocaleString()} 円</td>
                         <td>${careInsuranceEmployee.toLocaleString()} 円</td>
                     </tr>` : ''}
                     <tr>
-                        <td>雇用保険（社員負担）</td>
+                        <td>雇用保険</td>
                         <td>${(employmentInsuranceEmployee * 12).toLocaleString()} 円</td>
                         <td>${employmentInsuranceEmployee.toLocaleString()} 円</td>
                     </tr>
@@ -156,36 +156,36 @@ function calculateSalary() {
             <table class="table table-dark table-bordered mt-4">
                 <thead>
                     <tr>
-                        <th>項目</th>
+                        <th>会社負担</th>
                         <th>年額</th>
                         <th>月額</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td>住民税（会社負担）</td>
+                        <td>住民税</td>
                         <td>${(residentTaxEmployer * 12).toLocaleString()} 円</td>
                         <td>${residentTaxEmployer.toLocaleString()} 円</td>
                     </tr>
                     <tr>
-                        <td>健康保険（会社負担）</td>
+                        <td>健康保険</td>
                         <td>${(healthInsuranceEmployer * 12).toLocaleString()} 円</td>
                         <td>${healthInsuranceEmployer.toLocaleString()} 円</td>
                     </tr>
                     ${pensionCheck ? `
                     <tr>
-                        <td>厚生年金（会社負担）</td>
+                        <td>厚生年金</td>
                         <td>${(pensionInsuranceEmployer * 12).toLocaleString()} 円</td>
                         <td>${pensionInsuranceEmployer.toLocaleString()} 円</td>
                     </tr>` : ''}
                     ${careInsuranceCheck ? `
                     <tr>
-                        <td>介護保険（会社負担）</td>
+                        <td>介護保険</td>
                         <td>${(careInsuranceEmployer * 12).toLocaleString()} 円</td>
                         <td>${careInsuranceEmployer.toLocaleString()} 円</td>
                     </tr>` : ''}
                     <tr>
-                        <td>雇用保険（会社負担）</td>
+                        <td>雇用保険</td>
                         <td>${(employmentInsuranceEmployer * 12).toLocaleString()} 円</td>
                         <td>${employmentInsuranceEmployer.toLocaleString()} 円</td>
                     </tr>
