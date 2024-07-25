@@ -196,7 +196,7 @@ function calculateSalary() {
                     </tr>
                     ${childCareCheck ? `
                     <tr>
-                        <td>子ども・子育て拠出金</td>
+                        <td>子育て拠出</td>
                         <td>${(childCareEmployer * 12).toLocaleString()} 円</td>
                         <td>${childCareEmployer.toLocaleString()} 円</td>
                     </tr>` : ''}
