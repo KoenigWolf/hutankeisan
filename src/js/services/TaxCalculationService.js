@@ -1,76 +1,98 @@
-import { TAX_RATES, DEDUCTIONS } from '../constants/tax-rates.js';
+import { INCOME_TAX, SALARY_DEDUCTION, INSURANCE_RATES, RESIDENT_TAX, DEDUCTIONS, ROUNDING } from '../constants/tax-rates.js';
 
 /**
  * 税金計算サービスクラス
  */
 export class TaxCalculationService {
     /**
-     * 所得控除額を計算
-     * @param {number} annualSalary 年収
-     * @returns {number} 所得控除額
+     * 標準報酬月額を計算
+     * @param {number} salary 月給
+     * @param {Object} limits 上限・下限値
+     * @returns {number} 標準報酬月額
      */
-    calculateIncomeDeduction(annualSalary) {
-        const bracket = DEDUCTIONS.INCOME_BRACKETS.find(b => annualSalary <= b.threshold);
-        return bracket.rate ? Math.max(annualSalary * bracket.rate, bracket.base) : bracket.base;
+    calculateStandardMonthlyRemuneration(salary, limits) {
+        return Math.max(Math.min(salary, limits.MAX_SALARY), limits.MIN_SALARY);
+    }
+
+    /**
+     * 給与所得控除を計算
+     * @param {number} annualSalary 年収
+     * @returns {number} 給与所得控除額
+     */
+    calculateSalaryDeduction(annualSalary) {
+        const bracket = SALARY_DEDUCTION.BRACKETS.find(b => annualSalary <= b.threshold);
+        if (bracket.base) {
+            return bracket.base;
+        }
+        return Math.floor(annualSalary * bracket.rate + bracket.addition);
     }
 
     /**
      * 所得税を計算
      * @param {number} monthlySalary 月給
+     * @param {number} bonus ボーナス
      * @returns {number} 月額所得税
      */
-    calculateIncomeTax(monthlySalary) {
-        const annualSalary = monthlySalary * 12;
-        const incomeDeduction = this.calculateIncomeDeduction(annualSalary);
-        const taxableIncome = annualSalary - incomeDeduction - DEDUCTIONS.BASIC;
+    calculateIncomeTax(monthlySalary, bonus = 0) {
+        const annualSalary = monthlySalary * 12 + bonus;
+        const salaryDeduction = this.calculateSalaryDeduction(annualSalary);
+        const taxableIncome = annualSalary - salaryDeduction - DEDUCTIONS.BASIC;
 
-        let remainingIncome = taxableIncome;
-        let totalTax = 0;
-        let prevThreshold = 0;
-
-        for (const bracket of TAX_RATES.INCOME_TAX_BRACKETS) {
-            const taxableAmount = Math.min(
-                Math.max(0, remainingIncome),
-                bracket.threshold - prevThreshold
-            );
-            totalTax += taxableAmount * bracket.rate;
-            remainingIncome -= taxableAmount;
-            prevThreshold = bracket.threshold;
-
-            if (remainingIncome <= 0) break;
+        if (taxableIncome <= 0) {
+            return 0;
         }
 
-        return Math.floor(totalTax / 12);
+        const bracket = INCOME_TAX.BRACKETS.find(b => taxableIncome <= b.threshold);
+        const tax = taxableIncome * bracket.rate - bracket.deduction;
+        return ROUNDING.TAX(Math.max(0, tax) / 12);
     }
 
     /**
      * 保険料を計算
-     * @param {number} baseSalary 基本給
-     * @param {number} rate 保険料率
-     * @param {number} [divider=2] 負担分割合
+     * @param {number} salary 給与
+     * @param {Object} insuranceConfig 保険設定
      * @returns {number} 保険料
      */
-    calculateInsurance(baseSalary, rate, divider = 2) {
-        return Math.floor(baseSalary * rate / divider);
+    calculateInsurance(salary, insuranceConfig) {
+        let baseSalary = salary;
+        if (insuranceConfig.MIN_SALARY) {
+            baseSalary = this.calculateStandardMonthlyRemuneration(
+                salary,
+                insuranceConfig
+            );
+        }
+        const amount = baseSalary * insuranceConfig.RATE;
+        return ROUNDING.INSURANCE(amount / insuranceConfig.SHARE);
     }
 
     /**
      * 社員負担分を計算
      * @param {number} monthlySalary 月給
-     * @param {number} annualSalary 年収
+     * @param {number} bonus ボーナス
      * @param {Object} options オプション
      * @returns {Object} 社員負担の内訳と合計
      */
-    calculateEmployeeDeductions(monthlySalary, annualSalary, options) {
+    calculateEmployeeDeductions(monthlySalary, bonus, options) {
+        const annualSalary = monthlySalary * 12 + bonus;
         const deductions = {
-            incomeTax: this.calculateIncomeTax(monthlySalary),
-            residentTax: Math.floor(annualSalary * TAX_RATES.RESIDENT_TAX_RATE / 24),
-            healthInsurance: this.calculateInsurance(monthlySalary, TAX_RATES.HEALTH_INSURANCE_RATE),
-            employmentInsurance: this.calculateInsurance(monthlySalary, TAX_RATES.EMPLOYMENT_INSURANCE_EMPLOYEE_RATE),
-            pension: options.pension ? this.calculateInsurance(monthlySalary, TAX_RATES.PENSION_INSURANCE_RATE) : 0,
-            careInsurance: options.careInsurance ? this.calculateInsurance(monthlySalary, TAX_RATES.CARE_INSURANCE_RATE) : 0
+            incomeTax: this.calculateIncomeTax(monthlySalary, bonus),
+            residentTax: ROUNDING.TAX(annualSalary * RESIDENT_TAX.TOTAL / 12),
+            healthInsurance: this.calculateInsurance(monthlySalary, INSURANCE_RATES.HEALTH),
+            employmentInsurance: this.calculateInsurance(monthlySalary, {
+                RATE: INSURANCE_RATES.EMPLOYMENT.EMPLOYEE_RATE,
+                SHARE: 1
+            })
         };
 
+        // オプションの保険料を計算
+        if (options.pension) {
+            deductions.pension = this.calculateInsurance(monthlySalary, INSURANCE_RATES.PENSION);
+        }
+        if (options.careInsurance) {
+            deductions.careInsurance = this.calculateInsurance(monthlySalary, INSURANCE_RATES.CARE);
+        }
+
+        // 合計を計算
         deductions.total = Object.values(deductions).reduce((sum, value) => sum + value, 0);
         return deductions;
     }
@@ -78,19 +100,45 @@ export class TaxCalculationService {
     /**
      * 会社負担分を計算
      * @param {number} monthlySalary 月給
-     * @param {number} annualSalary 年収
+     * @param {number} bonus ボーナス
      * @param {Object} options オプション
      * @returns {Object} 会社負担の内訳
      */
-    calculateEmployerDeductions(monthlySalary, annualSalary, options) {
-        return {
-            residentTax: Math.floor(annualSalary * TAX_RATES.RESIDENT_TAX_RATE / 24),
-            healthInsurance: this.calculateInsurance(monthlySalary, TAX_RATES.HEALTH_INSURANCE_RATE),
-            employmentInsurance: this.calculateInsurance(monthlySalary, TAX_RATES.EMPLOYMENT_INSURANCE_EMPLOYER_RATE, 1),
-            laborInsurance: this.calculateInsurance(monthlySalary, TAX_RATES.LABOR_INSURANCE_RATE, 1),
-            pension: options.pension ? this.calculateInsurance(monthlySalary, TAX_RATES.PENSION_INSURANCE_RATE) : 0,
-            careInsurance: options.careInsurance ? this.calculateInsurance(monthlySalary, TAX_RATES.CARE_INSURANCE_RATE) : 0,
-            childCare: options.childCare ? this.calculateInsurance(monthlySalary, TAX_RATES.CHILD_CARE_RATE, 1) : 0
+    calculateEmployerDeductions(monthlySalary, bonus, options) {
+        const annualSalary = monthlySalary * 12 + bonus;
+        const deductions = {
+            residentTax: ROUNDING.TAX(annualSalary * RESIDENT_TAX.TOTAL / 12),
+            healthInsurance: this.calculateInsurance(monthlySalary, INSURANCE_RATES.HEALTH),
+            employmentInsurance: this.calculateInsurance(monthlySalary, {
+                RATE: INSURANCE_RATES.EMPLOYMENT.EMPLOYER_RATE,
+                SHARE: 1
+            }),
+            laborInsurance: this.calculateInsurance(monthlySalary, INSURANCE_RATES.LABOR)
         };
+
+        // オプションの保険料を計算
+        if (options.pension) {
+            deductions.pension = this.calculateInsurance(monthlySalary, INSURANCE_RATES.PENSION);
+        }
+        if (options.careInsurance) {
+            deductions.careInsurance = this.calculateInsurance(monthlySalary, INSURANCE_RATES.CARE);
+        }
+        if (options.childCare) {
+            deductions.childCare = this.calculateInsurance(monthlySalary, INSURANCE_RATES.CHILD_CARE);
+        }
+
+        return deductions;
+    }
+
+    /**
+     * 手取り額を計算
+     * @param {number} monthlySalary 月給
+     * @param {number} bonus ボーナス
+     * @param {Object} options オプション
+     * @returns {number} 手取り額
+     */
+    calculateNetSalary(monthlySalary, bonus, options) {
+        const deductions = this.calculateEmployeeDeductions(monthlySalary, bonus, options);
+        return monthlySalary - deductions.total;
     }
 }
