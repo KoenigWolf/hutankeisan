@@ -5,6 +5,51 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2025-02-12
+
+### Added
+- アクセシビリティ機能の強化
+  - WAI-ARIA属性のサポート
+  - スクリーンリーダー対応の改善
+  - キーボードナビゲーションの最適化
+- フォームの機能拡張
+  - 入力値の自動保存（LocalStorage）
+  - リアルタイムバリデーション
+  - ヘルプテキストの追加
+- 印刷機能
+  - 印刷用スタイルシート
+  - 印刷プレビュー対応
+- デバッグモードの追加
+  - パフォーマンスメトリクス
+  - 状態確認ツール
+  - エラーログ機能
+
+### Changed
+- UIデザインの改善
+  - フォームレイアウトの最適化
+  - エラー表示の視認性向上
+  - アニメーションとトランジションの追加
+- レスポンシブ対応の強化
+  - モバイルファーストデザイン
+  - テーブル表示の改善
+  - グリッドレイアウトの採用
+- パフォーマンスの最適化
+  - 非同期処理の導入
+  - 状態管理の改善
+  - メモリ使用量の最適化
+
+### Fixed
+- フォームのバリデーション処理
+  - エラーメッセージの永続化問題
+  - 数値入力の制限機能
+- エラーハンドリングの改善
+  - グローバルエラー表示
+  - エラーリカバリー機能
+- アクセシビリティの問題
+  - コントラスト比の調整
+  - フォーカス管理の修正
+  - スクリーンリーダーの読み上げ順序
+
 ## [1.2.0] - 2025-02-12
 
 ### Added
@@ -103,6 +148,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - 会社負担額の内訳
   - 手取り額の計算
 
+[1.3.0]: https://github.com/username/repo/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/username/repo/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/username/repo/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/username/repo/releases/tag/v1.0.0
