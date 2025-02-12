@@ -4,48 +4,58 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>税金計算アプリ</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            100: '#cce5ff',
+                            700: '#004085',
+                            800: '#343a40'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
 </head>
-<body>
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-10 col-lg-8">
-                <div class="card shadow-lg">
-                    <div class="card-body">
-                        <h1 class="card-title text-center">税金</h1>
-                        <form>
-                            <div class="form-group">
-                                <label for="baseSalary">月給(万円)</label>
-                                <input type="number" class="form-control" id="baseSalary" name="baseSalary" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="bonus">賞与(万円)</label>
-                                <input type="number" class="form-control" id="bonus" name="bonus">
-                            </div>
-                            <div class="form-group form-check">
-                                <input type="checkbox" class="form-check-input" id="pensionCheck" name="pensionCheck">
-                                <label class="form-check-label" for="pensionCheck">厚生年金</label>
-                            </div>
-                            <div class="form-group form-check">
-                                <input type="checkbox" class="form-check-input" id="careInsuranceCheck" name="careInsuranceCheck">
-                                <label class="form-check-label" for="careInsuranceCheck">介護保険料</label>
-                            </div>
-                            <div class="form-group form-check">
-                                <input type="checkbox" class="form-check-input" id="childCareCheck" name="childCareCheck">
-                                <label class="form-check-label" for="childCareCheck">子育て拠出</label>
-                            </div>
-                            <button type="button" class="btn btn-primary btn-block" onclick="calculateSalary()">計算</button>
-                        </form>
-                        <div id="result" class="mt-4 alert alert-primary" role="alert"></div>
+<body class="bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-white">
+    <div class="container mx-auto px-4 py-8">
+        <div class="max-w-4xl mx-auto">
+            <div class="bg-primary-800 rounded-lg shadow-lg p-6">
+                <h1 class="text-2xl font-bold text-center text-white mb-6">税金</h1>
+                <form class="space-y-4">
+                    <div class="space-y-2">
+                        <label for="baseSalary" class="block text-white">月給(万円)</label>
+                        <input type="number" class="w-full px-4 py-2 rounded bg-gray-700 text-white border border-gray-600 focus:outline-none focus:border-blue-500" id="baseSalary" name="baseSalary" required>
                     </div>
-                </div>
+                    <div class="space-y-2">
+                        <label for="bonus" class="block text-white">賞与(万円)</label>
+                        <input type="number" class="w-full px-4 py-2 rounded bg-gray-700 text-white border border-gray-600 focus:outline-none focus:border-blue-500" id="bonus" name="bonus">
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex items-center">
+                            <input type="checkbox" class="w-4 h-4 text-blue-600" id="pensionCheck" name="pensionCheck">
+                            <label class="ml-2 text-white" for="pensionCheck">厚生年金</label>
+                        </div>
+                        <div class="flex items-center">
+                            <input type="checkbox" class="w-4 h-4 text-blue-600" id="careInsuranceCheck" name="careInsuranceCheck">
+                            <label class="ml-2 text-white" for="careInsuranceCheck">介護保険料</label>
+                        </div>
+                        <div class="flex items-center">
+                            <input type="checkbox" class="w-4 h-4 text-blue-600" id="childCareCheck" name="childCareCheck">
+                            <label class="ml-2 text-white" for="childCareCheck">子育て拠出</label>
+                        </div>
+                    </div>
+                    <button type="button" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-200" onclick="calculateSalary()">計算</button>
+                </form>
+                <div id="result" class="mt-6 bg-primary-100 text-primary-700 p-4 rounded-lg hidden"></div>
             </div>
         </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
